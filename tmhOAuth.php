@@ -52,6 +52,7 @@ class tmhOAuth {
         'is_streaming'               => false,
         'streaming_eol'              => "\r\n",
         'streaming_metrics_interval' => 60,
+        'oauth_http_header' => true
       ),
       $config
     );
@@ -286,6 +287,9 @@ class tmhOAuth {
   private function prepare_auth_header() {
     $this->headers = array();
     uksort($this->auth_params, 'strcmp');
+    if (!$this->config['oauth_http_header']) {
+        $this->request_params = array_merge($this->auth_params, $this->request_params);
+    }
     foreach ($this->auth_params as $k => $v) {
       $kv[] = "{$k}=\"{$v}\"";
     }
